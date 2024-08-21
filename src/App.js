@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Ollama } from 'ollama/browser';
 import './App.css';
 
@@ -8,7 +8,8 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [systemPrompt, setSystemPrompt] = useState("You are a bot who does as told.");
+  const [systemPrompt, setSystemPrompt] = useState("You are a helpful assistant.");
+  const inputRef = useRef(null);
 
   useEffect(() => {
     console.log('Conversation history:', JSON.stringify(messages, null, 2));
@@ -17,6 +18,14 @@ function App() {
   useEffect(() => {
     console.log('System prompt:', systemPrompt);
   }, [systemPrompt]);
+
+  const focusInput = useCallback(() => {
+    if (inputRef.current) {
+      setTimeout(() => {
+        inputRef.current.focus();
+      }, 0);
+    }
+  }, []);
 
   const sendMessage = async () => {
     if (input.trim() === '') return;
@@ -41,10 +50,19 @@ function App() {
       setMessages([...updatedMessages, assistantMessage]);
     } catch (error) {
       console.error('Error:', error);
-      setMessages([...updatedMessages, { role: 'error', content: `An error occurred: ${error.message}` }]);
+      const errorMessage = { role: 'error', content: `An error occurred: ${error.message}` };
+      setMessages([...updatedMessages, errorMessage]);
     }
 
     setIsLoading(false);
+    focusInput();
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
   };
 
   return (
@@ -67,10 +85,11 @@ function App() {
       </div>
       <div className="input-container">
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+          onKeyPress={handleKeyPress}
           placeholder="Type your message..."
           disabled={isLoading}
         />
