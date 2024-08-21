@@ -9,6 +9,11 @@ function App() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Add this useEffect hook
+  useEffect(() => {
+    console.log('Conversation history:', JSON.stringify(messages, null, 2));
+  }, [messages]);
+
   const sendMessage = async () => {
     if (input.trim() === '') return;
 
