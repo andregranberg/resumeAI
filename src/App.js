@@ -4,11 +4,20 @@ import './App.css';
 
 const ollama = new Ollama({ host: 'http://127.0.0.1:11434' });
 
+// Pre-loaded conversation
+const preloadedMessages = [
+  { role: 'user', content: 'What is the key to happiness?' },
+  { role: 'assistant', content: 'The key to happiness is often a combination of factors, including positive relationships, a sense of purpose, gratitude, and personal growth. It\'s important to focus on what truly matters to you and cultivate a positive mindset.' },
+  { role: 'user', content: 'How can I practice gratitude?' },
+  { role: 'assistant', content: 'Practicing gratitude can be done in several ways:\n1. Keep a gratitude journal\n2. Express appreciation to others\n3. Reflect on positive experiences daily\n4. Practice mindfulness\n5. Volunteer or help others\nConsistency is key in developing a grateful mindset.' }
+];
+
+// If you do not want to pre-load a conversation, then simply have empty square brackets like this: useState([])
 function App() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(preloadedMessages);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [systemPrompt, setSystemPrompt] = useState("You are a helpful assistant.");
+  const [systemPrompt, setSystemPrompt] = useState("You are an expert on happiness.");
   const inputRef = useRef(null);
 
   useEffect(() => {
