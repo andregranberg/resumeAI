@@ -26,6 +26,8 @@ function App() {
   const [wordCount, setWordCount] = useState(() => parseInt(localStorage.getItem('wordCount')) || 500);
   const [followUpPrompt, setFollowUpPrompt] = useState('');
   const resultRef = useRef(null);
+  const jobAdRef = useRef(null);
+  const additionalInfoRef = useRef(null);
 
   useEffect(() => {
     localStorage.setItem('name', name);
@@ -37,6 +39,18 @@ function App() {
     localStorage.setItem('additionalInfo', additionalInfo);
     localStorage.setItem('wordCount', wordCount.toString());
   }, [name, educations, workExperiences, applyingCompany, applyingTitle, jobAd, additionalInfo, wordCount]);
+
+  const adjustTextareaHeight = (textarea) => {
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight(jobAdRef.current);
+    adjustTextareaHeight(additionalInfoRef.current);
+  }, [jobAd, additionalInfo]);
 
   const addEducation = () => {
     setEducations([...educations, { school: '', degree: '', level: 'Bachelors' }]);
@@ -243,18 +257,28 @@ function App() {
           <label htmlFor="jobAd">Describe the job (Optional)</label>
           <textarea
             id="jobAd"
+            ref={jobAdRef}
             value={jobAd}
-            onChange={(e) => setJobAd(e.target.value)}
+            onChange={(e) => {
+              setJobAd(e.target.value);
+              adjustTextareaHeight(e.target);
+            }}
             placeholder="You could paste the job post here, for example"
+            className="auto-expand-textarea"
           />
         </div>
         <div className="input-group">
           <label htmlFor="additionalInfo">Additional Information (Optional):</label>
           <textarea
             id="additionalInfo"
+            ref={additionalInfoRef}
             value={additionalInfo}
-            onChange={(e) => setAdditionalInfo(e.target.value)}
+            onChange={(e) => {
+              setAdditionalInfo(e.target.value);
+              adjustTextareaHeight(e.target);
+            }}
             placeholder="Add any other relevant information here"
+            className="auto-expand-textarea"
           />
         </div>
         <div className="input-group">
