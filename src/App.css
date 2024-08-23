@@ -138,3 +138,18 @@ button:disabled {
     font-size: 14px;
   }
 }
+
+.follow-up-container {
+  margin-top: 20px;
+}
+
+.follow-up-input {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  margin-bottom: 10px;
+}

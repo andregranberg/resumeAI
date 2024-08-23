@@ -24,6 +24,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [wordCount, setWordCount] = useState(() => parseInt(localStorage.getItem('wordCount')) || 500);
+  const [followUpPrompt, setFollowUpPrompt] = useState('');
   const resultRef = useRef(null);
 
   useEffect(() => {
@@ -89,7 +90,7 @@ function App() {
     Job Ad: ${jobAd}
     Additional Information: ${additionalInfo}
     
-    Please provide a well-written, professional cover letter based on this information. The letter should highlight the applicant's relevant skills and experiences, and explain why they are a good fit for the ${applyingTitle} position at ${applyingCompany} and why they would like to work there. Incorporate the additional information provided if relevant.
+    Please provide a well-written, professional cover letter based on this information. The letter should highlight the applicant's relevant skills and experiences, and explain why they are a good fit for the ${applyingTitle} position at ${applyingCompany}. Incorporate the additional information provided if relevant.
     
     It is important that the letter is around ${wordCount} words.`;
 
@@ -106,6 +107,38 @@ function App() {
     }
 
     setIsLoading(false);
+  };
+
+  const sendFollowUpPrompt = async () => {
+    if (!result) {
+      alert("Please generate a cover letter first.");
+      return;
+    }
+
+    setIsLoading(true);
+    const prompt = `You have previously generated this cover letter:
+
+    ${result}
+
+    Please modify the cover letter according to the following request:
+    ${followUpPrompt}
+
+    Provide the updated cover letter.`;
+
+    try {
+      const response = await ollama.chat({
+        model: 'llama3.1',
+        messages: [{ role: 'user', content: prompt }],
+      });
+
+      setResult(response.message.content);
+    } catch (error) {
+      console.error('Error:', error);
+      setResult(`An error occurred: ${error.message}`);
+    }
+
+    setIsLoading(false);
+    setFollowUpPrompt('');
   };
 
   const copyToClipboard = () => {
@@ -216,12 +249,12 @@ function App() {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="additionalInfo">Additional Information about you (Optional):</label>
+          <label htmlFor="additionalInfo">Additional Information (Optional):</label>
           <textarea
             id="additionalInfo"
             value={additionalInfo}
             onChange={(e) => setAdditionalInfo(e.target.value)}
-            placeholder="Any special skills, tools, or career achievements"
+            placeholder="Add any other relevant information here"
           />
         </div>
         <div className="input-group">
@@ -252,6 +285,17 @@ function App() {
             readOnly
             className="result-text"
           />
+          <div className="follow-up-container">
+            <textarea
+              value={followUpPrompt}
+              onChange={(e) => setFollowUpPrompt(e.target.value)}
+              placeholder="Enter a follow-up request to modify the cover letter"
+              className="follow-up-input"
+            />
+            <button onClick={sendFollowUpPrompt} disabled={isLoading}>
+              {isLoading ? 'Updating...' : 'Update Cover Letter'}
+            </button>
+          </div>
         </div>
       )}
     </div>
