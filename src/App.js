@@ -44,9 +44,9 @@ function App() {
 
   const copyToClipboard = () => {
     if (resultRef.current) {
-      resultRef.current.select();
-      document.execCommand('copy');
-      setCopied(true);
+      navigator.clipboard.writeText(resultRef.current.value).then(() => {
+        setCopied(true);
+      });
     }
   };
 
