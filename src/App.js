@@ -19,6 +19,7 @@ function App() {
   const [applyingCompany, setApplyingCompany] = useState(() => localStorage.getItem('applyingCompany') || '');
   const [applyingTitle, setApplyingTitle] = useState(() => localStorage.getItem('applyingTitle') || '');
   const [jobAd, setJobAd] = useState(() => localStorage.getItem('jobAd') || '');
+  const [additionalInfo, setAdditionalInfo] = useState(() => localStorage.getItem('additionalInfo') || '');
   const [result, setResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -32,8 +33,9 @@ function App() {
     localStorage.setItem('applyingCompany', applyingCompany);
     localStorage.setItem('applyingTitle', applyingTitle);
     localStorage.setItem('jobAd', jobAd);
+    localStorage.setItem('additionalInfo', additionalInfo);
     localStorage.setItem('wordCount', wordCount.toString());
-  }, [name, educations, workExperiences, applyingCompany, applyingTitle, jobAd, wordCount]);
+  }, [name, educations, workExperiences, applyingCompany, applyingTitle, jobAd, additionalInfo, wordCount]);
 
   const addEducation = () => {
     setEducations([...educations, { school: '', degree: '', level: 'Bachelors' }]);
@@ -85,8 +87,9 @@ function App() {
     Company: ${applyingCompany}
     Position: ${applyingTitle}
     Job Ad: ${jobAd}
+    Additional Information: ${additionalInfo}
     
-    Please provide a well-written, professional cover letter based on this information. The letter should highlight the applicant's relevant skills and experiences, and explain why they are a good fit for the ${applyingTitle} position at ${applyingCompany}.
+    Please provide a well-written, professional cover letter based on this information. The letter should highlight the applicant's relevant skills and experiences, and explain why they are a good fit for the ${applyingTitle} position at ${applyingCompany} and why they would like to work there. Incorporate the additional information provided if relevant.
     
     It is important that the letter is around ${wordCount} words.`;
 
@@ -210,6 +213,15 @@ function App() {
             value={jobAd}
             onChange={(e) => setJobAd(e.target.value)}
             placeholder="You could paste the job post here, for example"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="additionalInfo">Additional Information about you (Optional):</label>
+          <textarea
+            id="additionalInfo"
+            value={additionalInfo}
+            onChange={(e) => setAdditionalInfo(e.target.value)}
+            placeholder="Any special skills, tools, or career achievements"
           />
         </div>
         <div className="input-group">
