@@ -13,7 +13,7 @@ function App() {
   const [result, setResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [wordCount, setWordCount] = useState(500); // Default to 500 words
+  const [wordCount, setWordCount] = useState(500);
   const resultRef = useRef(null);
 
   const generateCoverLetter = async () => {
@@ -66,40 +66,60 @@ function App() {
     <div className="App">
       <h1>Cover Letter Generator</h1>
       <div className="input-container">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter your name..."
-        />
-        <textarea
-          value={education}
-          onChange={(e) => setEducation(e.target.value)}
-          placeholder="Enter your education..."
-        />
-        <textarea
-          value={experience}
-          onChange={(e) => setExperience(e.target.value)}
-          placeholder="Enter your work experience..."
-        />
-        <input
-          type="text"
-          value={jobTitle}
-          onChange={(e) => setJobTitle(e.target.value)}
-          placeholder="Enter desired job title..."
-        />
-        <textarea
-          value={jobAd}
-          onChange={(e) => setJobAd(e.target.value)}
-          placeholder="Paste the job ad here..."
-        />
-        <div className="word-count-container">
-          <label htmlFor="wordCount">Make the letter around {wordCount} words</label>
+        <div className="input-group">
+          <label htmlFor="name">Full Name:</label>
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your full name"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="education">Education:</label>
+          <textarea
+            id="education"
+            value={education}
+            onChange={(e) => setEducation(e.target.value)}
+            placeholder="Enter your educational background"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="experience">Work Experience:</label>
+          <textarea
+            id="experience"
+            value={experience}
+            onChange={(e) => setExperience(e.target.value)}
+            placeholder="Enter your relevant work experience"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="jobTitle">Desired Job Title:</label>
+          <input
+            id="jobTitle"
+            type="text"
+            value={jobTitle}
+            onChange={(e) => setJobTitle(e.target.value)}
+            placeholder="Enter the job title you're applying for"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="jobAd">Job Advertisement:</label>
+          <textarea
+            id="jobAd"
+            value={jobAd}
+            onChange={(e) => setJobAd(e.target.value)}
+            placeholder="Paste the job advertisement here"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="wordCount">Word Count: {wordCount}</label>
           <input
             type="range"
             id="wordCount"
             min="0"
-            max="500"
+            max="1000"
             value={wordCount}
             onChange={(e) => setWordCount(e.target.value)}
           />

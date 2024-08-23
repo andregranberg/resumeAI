@@ -112,3 +112,33 @@ button:disabled {
 .word-count-container input[type="range"] {
   width: 100%;
 }
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-group input[type="text"],
+.input-group textarea {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-group textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.input-group input[type="range"] {
+  width: 100%;
+}
