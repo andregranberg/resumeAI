@@ -7,7 +7,10 @@ const ollama = new Ollama({ host: 'http://127.0.0.1:11434' });
 function App() {
   const [name, setName] = useState(() => localStorage.getItem('name') || '');
   const [education, setEducation] = useState(() => localStorage.getItem('education') || '');
-  const [experience, setExperience] = useState(() => localStorage.getItem('experience') || '');
+  const [workExperiences, setWorkExperiences] = useState(() => {
+    const savedExperiences = localStorage.getItem('workExperiences');
+    return savedExperiences ? JSON.parse(savedExperiences) : [{ company: '', title: '' }];
+  });
   const [jobTitle, setJobTitle] = useState(() => localStorage.getItem('jobTitle') || '');
   const [jobAd, setJobAd] = useState(() => localStorage.getItem('jobAd') || '');
   const [result, setResult] = useState('');
@@ -19,19 +22,39 @@ function App() {
   useEffect(() => {
     localStorage.setItem('name', name);
     localStorage.setItem('education', education);
-    localStorage.setItem('experience', experience);
+    localStorage.setItem('workExperiences', JSON.stringify(workExperiences));
     localStorage.setItem('jobTitle', jobTitle);
     localStorage.setItem('jobAd', jobAd);
     localStorage.setItem('wordCount', wordCount.toString());
-  }, [name, education, experience, jobTitle, jobAd, wordCount]);
+  }, [name, education, workExperiences, jobTitle, jobAd, wordCount]);
+
+  const addWorkExperience = () => {
+    setWorkExperiences([...workExperiences, { company: '', title: '' }]);
+  };
+
+  const removeWorkExperience = (index) => {
+    const newExperiences = workExperiences.filter((_, i) => i !== index);
+    setWorkExperiences(newExperiences);
+  };
+
+  const updateWorkExperience = (index, field, value) => {
+    const newExperiences = [...workExperiences];
+    newExperiences[index][field] = value;
+    setWorkExperiences(newExperiences);
+  };
 
   const generateCoverLetter = async () => {
     setIsLoading(true);
+    const experienceString = workExperiences
+      .map((exp, index) => `Experience ${index + 1}: ${exp.company} - ${exp.title}`)
+      .join('\n');
+
     const prompt = `Your job is to create a personalized cover letter for this person applying for the specified job.
     
     Name: ${name}
     Education: ${education}
-    Work Experience: ${experience}
+    Work Experience:
+    ${experienceString}
     Desired Job Title: ${jobTitle}
     Job Ad: ${jobAd}
     
@@ -95,13 +118,25 @@ function App() {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="experience">Work Experience:</label>
-          <textarea
-            id="experience"
-            value={experience}
-            onChange={(e) => setExperience(e.target.value)}
-            placeholder="Enter your relevant work experience"
-          />
+          <label>Work Experience:</label>
+          {workExperiences.map((exp, index) => (
+            <div key={index} className="work-experience-entry">
+              <input
+                type="text"
+                value={exp.company}
+                onChange={(e) => updateWorkExperience(index, 'company', e.target.value)}
+                placeholder="Company name"
+              />
+              <input
+                type="text"
+                value={exp.title}
+                onChange={(e) => updateWorkExperience(index, 'title', e.target.value)}
+                placeholder="Job title"
+              />
+              <button onClick={() => removeWorkExperience(index)}>Delete</button>
+            </div>
+          ))}
+          <button onClick={addWorkExperience}>Add Work Experience</button>
         </div>
         <div className="input-group">
           <label htmlFor="jobTitle">Desired Job Title:</label>
