@@ -98,8 +98,8 @@ function App() {
         <div className="result-container">
           <h2>Generated Cover Letter:</h2>
           <div className="copy-container">
-            <button onClick={copyToClipboard}>Copy to Clipboard</button>
-            {copied && <span className="copied-message">Copied to clipboard</span>}
+            <button onClick={copyToClipboard}>Copy letter</button>
+            {copied && <span className="copied-message">Copied</span>}
           </div>
           <textarea
             ref={resultRef}
