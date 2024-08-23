@@ -97,3 +97,18 @@ button:disabled {
     font-size: 14px;
   }
 }
+
+.word-count-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.word-count-container label {
+  margin-bottom: 5px;
+}
+
+.word-count-container input[type="range"] {
+  width: 100%;
+}

@@ -13,6 +13,7 @@ function App() {
   const [result, setResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [wordCount, setWordCount] = useState(500); // Default to 500 words
   const resultRef = useRef(null);
 
   const generateCoverLetter = async () => {
@@ -25,7 +26,9 @@ function App() {
     Desired Job Title: ${jobTitle}
     Job Ad: ${jobAd}
     
-    Please provide a well-written, professional cover letter based on this information. The letter should highlight the applicant's relevant skills and experiences, and explain why they are a good fit for the position.`;
+    Please provide a well-written, professional cover letter based on this information. The letter should highlight the applicant's relevant skills and experiences, and explain why they are a good fit for the position.
+    
+    It is important that the letter is around ${wordCount} words.`;
 
     try {
       const response = await ollama.chat({
@@ -90,6 +93,17 @@ function App() {
           onChange={(e) => setJobAd(e.target.value)}
           placeholder="Paste the job ad here..."
         />
+        <div className="word-count-container">
+          <label htmlFor="wordCount">Make the letter around {wordCount} words</label>
+          <input
+            type="range"
+            id="wordCount"
+            min="0"
+            max="500"
+            value={wordCount}
+            onChange={(e) => setWordCount(e.target.value)}
+          />
+        </div>
         <button onClick={generateCoverLetter} disabled={isLoading}>
           {isLoading ? 'Generating...' : 'Generate Cover Letter'}
         </button>
@@ -98,8 +112,8 @@ function App() {
         <div className="result-container">
           <h2>Generated Cover Letter:</h2>
           <div className="copy-container">
-            <button onClick={copyToClipboard}>Copy letter</button>
-            {copied && <span className="copied-message">Copied</span>}
+            <button onClick={copyToClipboard}>Copy to Clipboard</button>
+            {copied && <span className="copied-message">Copied to clipboard</span>}
           </div>
           <textarea
             ref={resultRef}
