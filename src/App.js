@@ -204,12 +204,12 @@ function App() {
           </div>
         </div>
         <div className="input-group">
-          <label htmlFor="jobAd">Job Advertisement:</label>
+          <label htmlFor="jobAd">Describe the job (Optional)</label>
           <textarea
             id="jobAd"
             value={jobAd}
             onChange={(e) => setJobAd(e.target.value)}
-            placeholder="Paste the job advertisement here"
+            placeholder="You could paste the job post here, for example"
           />
         </div>
         <div className="input-group">
