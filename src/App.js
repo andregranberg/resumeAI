@@ -11,7 +11,8 @@ function App() {
     const savedExperiences = localStorage.getItem('workExperiences');
     return savedExperiences ? JSON.parse(savedExperiences) : [{ company: '', title: '' }];
   });
-  const [jobTitle, setJobTitle] = useState(() => localStorage.getItem('jobTitle') || '');
+  const [applyingCompany, setApplyingCompany] = useState(() => localStorage.getItem('applyingCompany') || '');
+  const [applyingTitle, setApplyingTitle] = useState(() => localStorage.getItem('applyingTitle') || '');
   const [jobAd, setJobAd] = useState(() => localStorage.getItem('jobAd') || '');
   const [result, setResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,10 +24,11 @@ function App() {
     localStorage.setItem('name', name);
     localStorage.setItem('education', education);
     localStorage.setItem('workExperiences', JSON.stringify(workExperiences));
-    localStorage.setItem('jobTitle', jobTitle);
+    localStorage.setItem('applyingCompany', applyingCompany);
+    localStorage.setItem('applyingTitle', applyingTitle);
     localStorage.setItem('jobAd', jobAd);
     localStorage.setItem('wordCount', wordCount.toString());
-  }, [name, education, workExperiences, jobTitle, jobAd, wordCount]);
+  }, [name, education, workExperiences, applyingCompany, applyingTitle, jobAd, wordCount]);
 
   const addWorkExperience = () => {
     setWorkExperiences([...workExperiences, { company: '', title: '' }]);
@@ -55,10 +57,12 @@ function App() {
     Education: ${education}
     Work Experience:
     ${experienceString}
-    Desired Job Title: ${jobTitle}
+    Applying for:
+    Company: ${applyingCompany}
+    Position: ${applyingTitle}
     Job Ad: ${jobAd}
     
-    Please provide a well-written, professional cover letter based on this information. The letter should highlight the applicant's relevant skills and experiences, and explain why they are a good fit for the position.
+    Please provide a well-written, professional cover letter based on this information. The letter should highlight the applicant's relevant skills and experiences, and explain why they are a good fit for the ${applyingTitle} position at ${applyingCompany}.
     
     It is important that the letter is around ${wordCount} words.`;
 
@@ -139,14 +143,21 @@ function App() {
           <button onClick={addWorkExperience}>Add Work Experience</button>
         </div>
         <div className="input-group">
-          <label htmlFor="jobTitle">Desired Job Title:</label>
-          <input
-            id="jobTitle"
-            type="text"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-            placeholder="Enter the job title you're applying for"
-          />
+          <label>Where are you applying?</label>
+          <div className="applying-entry">
+            <input
+              type="text"
+              value={applyingCompany}
+              onChange={(e) => setApplyingCompany(e.target.value)}
+              placeholder="Company name"
+            />
+            <input
+              type="text"
+              value={applyingTitle}
+              onChange={(e) => setApplyingTitle(e.target.value)}
+              placeholder="Job title"
+            />
+          </div>
         </div>
         <div className="input-group">
           <label htmlFor="jobAd">Job Advertisement:</label>
