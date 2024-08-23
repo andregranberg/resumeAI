@@ -5,16 +5,25 @@ import './App.css';
 const ollama = new Ollama({ host: 'http://127.0.0.1:11434' });
 
 function App() {
-  const [name, setName] = useState('');
-  const [education, setEducation] = useState('');
-  const [experience, setExperience] = useState('');
-  const [jobTitle, setJobTitle] = useState('');
-  const [jobAd, setJobAd] = useState('');
+  const [name, setName] = useState(() => localStorage.getItem('name') || '');
+  const [education, setEducation] = useState(() => localStorage.getItem('education') || '');
+  const [experience, setExperience] = useState(() => localStorage.getItem('experience') || '');
+  const [jobTitle, setJobTitle] = useState(() => localStorage.getItem('jobTitle') || '');
+  const [jobAd, setJobAd] = useState(() => localStorage.getItem('jobAd') || '');
   const [result, setResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [wordCount, setWordCount] = useState(500);
+  const [wordCount, setWordCount] = useState(() => parseInt(localStorage.getItem('wordCount')) || 500);
   const resultRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem('name', name);
+    localStorage.setItem('education', education);
+    localStorage.setItem('experience', experience);
+    localStorage.setItem('jobTitle', jobTitle);
+    localStorage.setItem('jobAd', jobAd);
+    localStorage.setItem('wordCount', wordCount.toString());
+  }, [name, education, experience, jobTitle, jobAd, wordCount]);
 
   const generateCoverLetter = async () => {
     setIsLoading(true);
@@ -121,7 +130,7 @@ function App() {
             min="0"
             max="1000"
             value={wordCount}
-            onChange={(e) => setWordCount(e.target.value)}
+            onChange={(e) => setWordCount(parseInt(e.target.value))}
           />
         </div>
         <button onClick={generateCoverLetter} disabled={isLoading}>
