@@ -4,9 +4,14 @@ import './App.css';
 
 const ollama = new Ollama({ host: 'http://127.0.0.1:11434' });
 
+const degreeOptions = ["PhD", "Masters", "Bachelors", "High School"];
+
 function App() {
   const [name, setName] = useState(() => localStorage.getItem('name') || '');
-  const [education, setEducation] = useState(() => localStorage.getItem('education') || '');
+  const [educations, setEducations] = useState(() => {
+    const savedEducations = localStorage.getItem('educations');
+    return savedEducations ? JSON.parse(savedEducations) : [{ school: '', degree: '', level: 'Bachelors' }];
+  });
   const [workExperiences, setWorkExperiences] = useState(() => {
     const savedExperiences = localStorage.getItem('workExperiences');
     return savedExperiences ? JSON.parse(savedExperiences) : [{ company: '', title: '' }];
@@ -22,13 +27,28 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('name', name);
-    localStorage.setItem('education', education);
+    localStorage.setItem('educations', JSON.stringify(educations));
     localStorage.setItem('workExperiences', JSON.stringify(workExperiences));
     localStorage.setItem('applyingCompany', applyingCompany);
     localStorage.setItem('applyingTitle', applyingTitle);
     localStorage.setItem('jobAd', jobAd);
     localStorage.setItem('wordCount', wordCount.toString());
-  }, [name, education, workExperiences, applyingCompany, applyingTitle, jobAd, wordCount]);
+  }, [name, educations, workExperiences, applyingCompany, applyingTitle, jobAd, wordCount]);
+
+  const addEducation = () => {
+    setEducations([...educations, { school: '', degree: '', level: 'Bachelors' }]);
+  };
+
+  const removeEducation = (index) => {
+    const newEducations = educations.filter((_, i) => i !== index);
+    setEducations(newEducations);
+  };
+
+  const updateEducation = (index, field, value) => {
+    const newEducations = [...educations];
+    newEducations[index][field] = value;
+    setEducations(newEducations);
+  };
 
   const addWorkExperience = () => {
     setWorkExperiences([...workExperiences, { company: '', title: '' }]);
@@ -47,6 +67,9 @@ function App() {
 
   const generateCoverLetter = async () => {
     setIsLoading(true);
+    const educationString = educations
+      .map(edu => `I have a ${edu.level} from ${edu.school} in ${edu.degree}.`)
+      .join('\n');
     const experienceString = workExperiences
       .map((exp, index) => `Experience ${index + 1}: ${exp.company} - ${exp.title}`)
       .join('\n');
@@ -54,7 +77,8 @@ function App() {
     const prompt = `Your job is to create a personalized cover letter for this person applying for the specified job.
     
     Name: ${name}
-    Education: ${education}
+    Education:
+    ${educationString}
     Work Experience:
     ${experienceString}
     Applying for:
@@ -113,13 +137,33 @@ function App() {
           />
         </div>
         <div className="input-group">
-          <label htmlFor="education">Education:</label>
-          <textarea
-            id="education"
-            value={education}
-            onChange={(e) => setEducation(e.target.value)}
-            placeholder="Enter your educational background"
-          />
+          <label>Education:</label>
+          {educations.map((edu, index) => (
+            <div key={index} className="education-entry">
+              <input
+                type="text"
+                value={edu.school}
+                onChange={(e) => updateEducation(index, 'school', e.target.value)}
+                placeholder="School/University name"
+              />
+              <input
+                type="text"
+                value={edu.degree}
+                onChange={(e) => updateEducation(index, 'degree', e.target.value)}
+                placeholder="Degree"
+              />
+              <select
+                value={edu.level}
+                onChange={(e) => updateEducation(index, 'level', e.target.value)}
+              >
+                {degreeOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+              <button onClick={() => removeEducation(index)}>Delete</button>
+            </div>
+          ))}
+          <button onClick={addEducation}>Add Education</button>
         </div>
         <div className="input-group">
           <label>Work Experience:</label>
