@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Ollama } from 'ollama/browser';
+import jsPDF from 'jspdf';
 import './App.css';
 
 const ollama = new Ollama({ host: 'http://127.0.0.1:11434' });
@@ -165,6 +166,20 @@ function App() {
     }
   };
 
+  const downloadAsPDF = () => {
+    if (result) {
+      const pdf = new jsPDF();
+      
+      // Split the result into lines
+      const lines = pdf.splitTextToSize(result, 180);
+      
+      pdf.text(lines, 15, 15);
+      pdf.save("cover_letter.pdf");
+    } else {
+      alert("Please generate a cover letter first.");
+    }
+  };
+
   useEffect(() => {
     if (copied) {
       const timer = setTimeout(() => {
@@ -300,6 +315,7 @@ function App() {
           <h2>Generated Cover Letter:</h2>
           <div className="copy-container">
             <button onClick={copyToClipboard}>Copy to Clipboard</button>
+            <button onClick={downloadAsPDF}>Download as PDF</button>
             {copied && <span className="copied-message">Copied to clipboard</span>}
           </div>
           <textarea
