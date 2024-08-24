@@ -28,12 +28,39 @@ h1 {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid;
 }
 
-.input-group label {
+.input-group.name-section {
+  border-color: rgba(255, 165, 0, 0.5); /* Orange */
+}
+
+.input-group.education-section {
+  border-color: rgba(30, 144, 255, 0.5); /* Dodger Blue */
+}
+
+.input-group.work-experience-section {
+  border-color: rgba(50, 205, 50, 0.5); /* Lime Green */
+}
+
+.input-group.applying-section {
+  border-color: rgba(255, 105, 180, 0.5); /* Hot Pink */
+}
+
+.input-group.job-description-section {
+  border-color: rgba(138, 43, 226, 0.5); /* Blue Violet */
+}
+
+.input-group.additional-info-section {
+  border-color: rgba(0, 191, 255, 0.5); /* Deep Sky Blue */
+}
+
+.input-group > label:first-child {
+  font-size: 18px;
   font-weight: bold;
-  color: #444;
+  color: #2c3e50;
+  margin-bottom: 15px;
 }
 
 .input-group input[type="text"],
@@ -67,7 +94,7 @@ h1 {
   padding: 15px;
   background-color: #f9f9f9;
   border-radius: 6px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ddd;
 }
 
 .applying-entry {
@@ -135,7 +162,15 @@ button:disabled {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(52, 73, 94, 0.5);
+}
+
+.result-container h2 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 15px;
 }
 
 .copy-container {
@@ -186,6 +221,10 @@ button:disabled {
 
   h1 {
     font-size: 24px;
+  }
+
+  .input-group > label:first-child {
+    font-size: 16px;
   }
 
   .input-group input[type="text"],

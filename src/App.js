@@ -237,7 +237,7 @@ function App() {
           <button onClick={addWorkExperience}>Add Work Experience</button>
         </div>
         <div className="input-group">
-          <label>Where are you applying?</label>
+          <label htmlFor="jobAd">Job Details</label>
           <div className="applying-entry">
             <input
               type="text"
@@ -252,9 +252,6 @@ function App() {
               placeholder="Job title"
             />
           </div>
-        </div>
-        <div className="input-group">
-          <label htmlFor="jobAd">Describe the job (Optional)</label>
           <textarea
             id="jobAd"
             ref={jobAdRef}
@@ -263,7 +260,7 @@ function App() {
               setJobAd(e.target.value);
               adjustTextareaHeight(e.target);
             }}
-            placeholder="You could paste the job post here, for example"
+            placeholder="Describe the job or paste the job post here"
             className="auto-expand-textarea"
           />
         </div>
