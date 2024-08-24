@@ -22,6 +22,7 @@ function App() {
   const [jobAd, setJobAd] = useState(() => localStorage.getItem('jobAd') || '');
   const [additionalInfo, setAdditionalInfo] = useState(() => localStorage.getItem('additionalInfo') || '');
   const [result, setResult] = useState('');
+  const [originalResult, setOriginalResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [wordCount, setWordCount] = useState(() => parseInt(localStorage.getItem('wordCount')) || 500);
@@ -118,9 +119,11 @@ function App() {
       });
 
       setResult(response.message.content);
+      setOriginalResult(response.message.content);
     } catch (error) {
       console.error('Error:', error);
       setResult(`An error occurred: ${error.message}`);
+      setOriginalResult(`An error occurred: ${error.message}`);
     }
 
     setIsLoading(false);
@@ -140,7 +143,7 @@ function App() {
     Please modify the cover letter according to the following request:
     ${followUpPrompt}
 
-    Provide the updated cover letter.`;
+    Provide the updated cover letter only and NO OTHER TEXT.`;
 
     try {
       const response = await ollama.chat({
@@ -149,9 +152,11 @@ function App() {
       });
 
       setResult(response.message.content);
+      setOriginalResult(response.message.content);
     } catch (error) {
       console.error('Error:', error);
       setResult(`An error occurred: ${error.message}`);
+      setOriginalResult(`An error occurred: ${error.message}`);
     }
 
     setIsLoading(false);
@@ -178,6 +183,14 @@ function App() {
     } else {
       alert("Please generate a cover letter first.");
     }
+  };
+
+  const handleResultChange = (e) => {
+    setResult(e.target.value);
+  };
+
+  const resetToOriginal = () => {
+    setResult(originalResult);
   };
 
   useEffect(() => {
@@ -316,12 +329,13 @@ function App() {
           <div className="copy-container">
             <button onClick={copyToClipboard}>Copy to Clipboard</button>
             <button onClick={downloadAsPDF}>Download as PDF</button>
+            <button onClick={resetToOriginal}>Reset to Original</button>
             {copied && <span className="copied-message">Copied to clipboard</span>}
           </div>
           <textarea
             ref={resultRef}
             value={result}
-            readOnly
+            onChange={handleResultChange}
             className="result-text"
           />
           <div className="follow-up-container">
