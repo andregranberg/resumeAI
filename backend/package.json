@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@api/pplx": "file:.api/apis/pplx",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "ollama": "^0.5.8"

@@ -106,7 +106,7 @@ function App() {
     Please provide a well-written, professional cover letter based on this information. The letter should highlight the applicant's relevant skills and experiences, and explain why they are a good fit for the ${applyingTitle} position at ${applyingCompany}. Incorporate the additional information provided if relevant.
     
     It is important that the letter is around ${wordCount} words.
-    Only write the letter, give me no other text.
+    Only write the letter, give me no other text or meta information.
     `;
 
     try {
