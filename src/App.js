@@ -1,9 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Ollama } from 'ollama/browser';
 import jsPDF from 'jspdf';
 import './App.css';
-
-const ollama = new Ollama({ host: 'http://127.0.0.1:11434' });
 
 const degreeOptions = ["PhD", "Masters", "Bachelors", "High School"];
 
@@ -113,13 +110,21 @@ function App() {
     `;
 
     try {
-      const response = await ollama.chat({
-        model: 'llama3.1',
-        messages: [{ role: 'user', content: prompt }],
+      const response = await fetch('http://localhost:3001/generate-cover-letter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
       });
 
-      setResult(response.message.content);
-      setOriginalResult(response.message.content);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setResult(data.result);
+      setOriginalResult(data.result);
     } catch (error) {
       console.error('Error:', error);
       setResult(`An error occurred: ${error.message}`);
@@ -146,13 +151,21 @@ function App() {
     Provide the updated cover letter only and NO OTHER TEXT.`;
 
     try {
-      const response = await ollama.chat({
-        model: 'llama3.1',
-        messages: [{ role: 'user', content: prompt }],
+      const response = await fetch('http://localhost:3001/generate-cover-letter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
       });
 
-      setResult(response.message.content);
-      setOriginalResult(response.message.content);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setResult(data.result);
+      setOriginalResult(data.result);
     } catch (error) {
       console.error('Error:', error);
       setResult(`An error occurred: ${error.message}`);
@@ -175,32 +188,20 @@ function App() {
     if (result) {
       const pdf = new jsPDF();
       
-      // Set font size for the header
       pdf.setFontSize(12);
-      
-      // Add the full name to the left side of the header
       pdf.text(name, 15, 10);
       
-      // Get current date
       const currentDate = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
       });
       
-      // Add the current date to the right side of the header
       pdf.text(currentDate, pdf.internal.pageSize.width - 15, 10, { align: 'right' });
-      
-      // Add a line under the header
       pdf.line(15, 12, pdf.internal.pageSize.width - 15, 12);
-      
-      // Set font size for the main content
       pdf.setFontSize(10);
       
-      // Split the result into lines
       const lines = pdf.splitTextToSize(result, 180);
-      
-      // Start the main content below the header
       pdf.text(lines, 15, 20);
       
       pdf.save("cover_letter.pdf");
